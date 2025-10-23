@@ -39,7 +39,7 @@ class DB {
 
   static Future<int> insertarCita(Cita c) async {
     Database db = await _conectarDB();
-    return db.insert("PERSONA", c.toJSON()..remove("IDCITA"));
+    return db.insert("CITA", c.toJSON()..remove("IDCITA"));
   }
 
   static Future<List<Persona>> obtenerPersonas() async {
@@ -58,5 +58,16 @@ class DB {
     citasMap.forEach((cita) => citas.add(Cita.fromMap(cita)));
 
     return citas;
+  }
+
+  static Future<List<Map<String,dynamic>>> obtenerCitas2() async {
+    Database db = await _conectarDB();
+
+    final List<Map<String, dynamic>> citasMap =
+    await db.rawQuery('SELECT C.IDCITA, C.LUGAR, C.FECHA, C.HORA, C.ANOTACIONES, '
+        'P.NOMBRE FROM CITA C INNER JOIN PERSONA P ON (P.IDPERSONA = C.IDPERSONA)');
+
+    print(citasMap);
+    return citasMap;
   }
 }

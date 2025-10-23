@@ -3,8 +3,8 @@ import 'package:u3_ejercicio2_tabasconforanea/basedatosforanea.dart';
 import 'package:u3_ejercicio2_tabasconforanea/models/persona.dart';
 
 class Addpersona extends StatefulWidget {
-  final title = "Agrega una persona";
-  const Addpersona({super.key});
+  final Function() navigateToHome;
+  const Addpersona({required this.navigateToHome, super.key});
 
   @override
   State<Addpersona> createState() => _AddpersonaState();
@@ -81,6 +81,9 @@ class _AddpersonaState extends State<Addpersona> {
                         content: Text("Persona agregada a tus contactos"),
                       ),
                     );
+
+                     widget.navigateToHome();
+
                   });
                 },
                 child: Text("Agregar contacto", style: TextStyle(fontSize: 18)),

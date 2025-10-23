@@ -3,7 +3,7 @@ class Cita {
   String LUGAR;
   String FECHA;
   String HORA;
-  String ANOTACIONES;
+  String? ANOTACIONES;
   int IDPERSONA;
 
   Cita({
@@ -11,7 +11,7 @@ class Cita {
     required this.LUGAR,
     required this.FECHA,
     required this.HORA,
-    required this.ANOTACIONES,
+    this.ANOTACIONES,
     required this.IDPERSONA,
   });
 

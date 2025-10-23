@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:u3_ejercicio2_tabasconforanea/basedatosforanea.dart';
 import 'package:u3_ejercicio2_tabasconforanea/components/gridHours.dart';
+import 'package:u3_ejercicio2_tabasconforanea/models/cita.dart';
 import 'package:u3_ejercicio2_tabasconforanea/models/persona.dart';
 
 class Addcita extends StatefulWidget {
-  const Addcita({super.key});
+  final Function() navigateToHome;
+  const Addcita({required this.navigateToHome, super.key});
 
   @override
   State<Addcita> createState() => _AddcitaState();
@@ -36,8 +38,8 @@ class _AddcitaState extends State<Addcita> {
           hint: Text("Selecciona una persona"),
           value: personaSeleccionada,
           items: personas.asMap().entries.map((entry) {
-            int index = entry.key;
             var persona = entry.value;
+            int index = persona.IDPERSONA!;
             return DropdownMenuItem<int>(
               value: index,
               child: Text(persona.NOMBRE),
@@ -71,7 +73,6 @@ class _AddcitaState extends State<Addcita> {
             setHour: (String hour) {
               setState(() {
                 horaSeleccionada = hour;
-                print(horaSeleccionada);
               });
             },
           ),
@@ -106,7 +107,58 @@ class _AddcitaState extends State<Addcita> {
         ),
 
         //AGREGAR
-        FilledButton(onPressed: (){}, child: Text("Agendar cita"))
+        FilledButton(
+          onPressed: () {
+            if (!validarInputs()) return;
+            DB
+                .insertarCita(
+                  Cita(
+                    LUGAR: lugarController.text,
+                    FECHA: fechaSeleccionada!,
+                    HORA: horaSeleccionada,
+                    ANOTACIONES: anotacionesController.text,
+                    IDPERSONA: personaSeleccionada!,
+                  ),
+                )
+                .then((r) {
+                  if (r > 0) {
+                    print(r);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Row(
+                          children: [
+                            Icon(Icons.check_outlined, color: Colors.green),
+                            SizedBox(width: 3),
+                            Text(
+                              "Cita agendada correctamente",
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                    vaciarInputs();
+                    widget.navigateToHome();
+                    return;
+                  }
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Row(
+                        children: [
+                          Icon(Icons.cancel_outlined, color: Colors.redAccent),
+                          SizedBox(width: 3),
+                          Text(
+                            "Error al agendar cita",
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                  return;
+                });
+          },
+          child: Text("Agendar cita"),
+        ),
       ],
     );
   }
@@ -121,32 +173,41 @@ class _AddcitaState extends State<Addcita> {
 
   void vaciarInputs() {
     lugarController.text = "";
-    // telefonoPersona.text = "";
+    anotacionesController.text = "";
   }
 
-  // bool validarInputs() {
-  //   if (telefonoPersona.text.isEmpty && nombrePersona.text.isEmpty) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text("Llena los campos para poder ingresar una persona"),
-  //       ),
-  //     );
-  //     return false;
-  //   }
-  //
-  //   if (telefonoPersona.text.isEmpty) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("El campo de telefono debe estár lleno")),
-  //     );
-  //     return false;
-  //   }
-  //
-  //   if (nombrePersona.text.isEmpty) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("El campo de nombre debe estár lleno")),
-  //     );
-  //     return false;
-  //   }
-  //   return true;
-  // }
+  bool validarInputs() {
+    if (personaSeleccionada == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Debes seleccionar una persona con la que agendarás la cita",
+          ),
+        ),
+      );
+      return false;
+    }
+
+    if (fechaSeleccionada!.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Debes seleccionar una fecha")));
+      return false;
+    }
+
+    if (horaSeleccionada.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Debes seleccionar una hora")));
+      return false;
+    }
+
+    if (lugarController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Debes indicar un lugar para la cita")),
+      );
+      return false;
+    }
+    return true;
+  }
 }
