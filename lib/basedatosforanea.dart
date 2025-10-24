@@ -7,9 +7,9 @@ import 'package:u3_ejercicio2_tabasconforanea/models/cita.dart';
 class DB {
   static Future<Database> _conectarDB() async {
     return openDatabase(
-      join(await getDatabasesPath(), "ejercicio2.db"),
+      join(await getDatabasesPath(), "ejercicio2_2.db"),
       version: 1,
-      onConfigure: (db) => db.execute("PRAGMA foreign_key = ON"),
+      onConfigure: (db) async => await db.execute("PRAGMA foreign_keys = ON"),
       onCreate: (db, version) async {
         await db.execute(
           "CREATE TABLE PERSONA"

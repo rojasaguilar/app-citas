@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
   List<Map<String,dynamic>> citas = [];
   int _index = 0;
   late List<PageItem> pages;
-  late Map<String,dynamic> citaSeleccionada;
+  Map<String,dynamic> citaSeleccionada = {};
 
   @override
   void initState() {
@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
           _index = 0;
         });
       },)),
-      PageItem(title: "Datos de la cita", page: Datoscita()),
+      PageItem(title: "Datos de la cita", page: Datoscita(cita: citaSeleccionada,)),
     ];
     actualizarCitas();
   }
@@ -77,6 +77,7 @@ class _HomeState extends State<Home> {
         onTap: (x) {
           setState(() {
             _index = x;
+            citaSeleccionada = {};
           });
         },
       ),
@@ -92,6 +93,7 @@ class _HomeState extends State<Home> {
           print(x);
           citaSeleccionada = x;
           _index = 3;
+          pages[3] = PageItem(title: "Datos de la cita", page: Datoscita(cita: citaSeleccionada,));
         });
       },));
     });

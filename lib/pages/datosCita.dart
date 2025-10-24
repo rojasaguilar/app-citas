@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Datoscita extends StatefulWidget {
-  const Datoscita({super.key});
+  final Map<String,dynamic> cita;
+  const Datoscita({required this.cita, super.key});
 
   @override
   State<Datoscita> createState() => _DatoscitaState();
@@ -10,6 +11,8 @@ class Datoscita extends StatefulWidget {
 class _DatoscitaState extends State<Datoscita> {
   @override
   Widget build(BuildContext context) {
-    return Center();
+    return widget.cita.isEmpty?
+        Center(child: Text("Selecciona una cita para ver sus detalles"),) :
+        Center(child: Text(widget.cita['NOMBRE']??""),);
   }
 }
