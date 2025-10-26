@@ -60,14 +60,34 @@ class DB {
     return citas;
   }
 
-  static Future<List<Map<String,dynamic>>> obtenerCitas2() async {
+  static Future<List<Map<String, dynamic>>> obtenerCitas2() async {
     Database db = await _conectarDB();
 
-    final List<Map<String, dynamic>> citasMap =
-    await db.rawQuery('SELECT C.IDCITA, C.LUGAR, C.FECHA, C.HORA, C.ANOTACIONES, '
-        'P.NOMBRE FROM CITA C INNER JOIN PERSONA P ON (P.IDPERSONA = C.IDPERSONA)');
+    final List<Map<String, dynamic>> citasMap = await db.rawQuery(
+      'SELECT C.IDCITA, C.LUGAR, C.FECHA, C.HORA, C.ANOTACIONES, '
+      'P.NOMBRE FROM CITA C INNER JOIN PERSONA P ON (P.IDPERSONA = C.IDPERSONA)',
+    );
 
     print(citasMap);
     return citasMap;
+  }
+
+  static Future<int> actualizarPersona(Persona p) async {
+    Database db = await _conectarDB();
+    final result = await db.rawUpdate(
+      'UPDATE PERSONA '
+      'SET NOMBRE = ?, TELEFONO = ?  WHERE IDPERSONA = ?',
+      [p.NOMBRE, p.TELEFONO, p.IDPERSONA],
+    );
+    return result;
+  }
+
+  static Future<int> eliminarPersona(int id) async {
+    Database db = await _conectarDB();
+    final result = await db.rawDelete(
+      'DELETE FROM PERSONA WHERE IDPERSONA = ?',
+      [id],
+    );
+    return result;
   }
 }

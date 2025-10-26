@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:u3_ejercicio2_tabasconforanea/basedatosforanea.dart';
 import 'package:u3_ejercicio2_tabasconforanea/components/carrucelCitas.dart';
 import 'package:u3_ejercicio2_tabasconforanea/pages/addCita.dart';
-import 'package:u3_ejercicio2_tabasconforanea/pages/addPersona.dart';
+import 'package:u3_ejercicio2_tabasconforanea/pages/persona/addPersona.dart';
 import 'package:u3_ejercicio2_tabasconforanea/pages/datosCita.dart';
 import 'package:u3_ejercicio2_tabasconforanea/pages/pageItem.dart';
+import 'package:u3_ejercicio2_tabasconforanea/pages/persona/personas.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -36,12 +37,13 @@ class _HomeState extends State<Home> {
           actualizarCitas();
         });
       },)),
-      PageItem(title: "Agregar persona", page: Addpersona(navigateToHome: (){
-        setState(() {
-
-          _index = 0;
-        });
-      },)),
+      // PageItem(title: "Agregar persona", page: Addpersona(navigateToHome: (){
+      //   setState(() {
+      //
+      //     _index = 0;
+      //   });
+      // },)),
+      PageItem(title: "Persona", page: Personas()),
       PageItem(title: "Datos de la cita", page: Datoscita(cita: citaSeleccionada,)),
     ];
     actualizarCitas();
@@ -61,11 +63,11 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_chart_sharp),
-            label: "Nueva cita",
+            label: "Cita",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_reaction_outlined),
-            label: "Nueva persona",
+            icon: Icon(Icons.face_2_outlined),
+            label: "Contactos",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.info_outline),
