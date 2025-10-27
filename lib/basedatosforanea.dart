@@ -7,7 +7,7 @@ import 'package:u3_ejercicio2_tabasconforanea/models/cita.dart';
 class DB {
   static Future<Database> _conectarDB() async {
     return openDatabase(
-      join(await getDatabasesPath(), "ejercicio2_2.db"),
+      join(await getDatabasesPath(), "ejercicio2_3.db"),
       version: 1,
       onConfigure: (db) async => await db.execute("PRAGMA foreign_keys = ON"),
       onCreate: (db, version) async {
@@ -65,11 +65,24 @@ class DB {
 
     final List<Map<String, dynamic>> citasMap = await db.rawQuery(
       'SELECT C.IDCITA, C.LUGAR, C.FECHA, C.HORA, C.ANOTACIONES, '
-      'P.NOMBRE FROM CITA C INNER JOIN PERSONA P ON (P.IDPERSONA = C.IDPERSONA)',
+      'P.NOMBRE, P.IDPERSONA FROM CITA C INNER JOIN PERSONA P ON (P.IDPERSONA = C.IDPERSONA)',
     );
 
     print(citasMap);
     return citasMap;
+  }
+
+  static Future<Map<String, dynamic>> vistaCita(int id) async {
+    Database db = await _conectarDB();
+
+    final List<Map<String, dynamic>> citasMap = await db.rawQuery(
+      'SELECT C.IDCITA, C.LUGAR, C.FECHA, C.HORA, C.ANOTACIONES, '
+          'P.NOMBRE, P.IDPERSONA FROM CITA C INNER JOIN PERSONA P ON (P.IDPERSONA = C.IDPERSONA)'
+          'WHERE IDCITA = ?', [id]
+    );
+
+    print(citasMap[0]);
+    return citasMap[0];
   }
 
   static Future<int> actualizarPersona(Persona p) async {
@@ -82,12 +95,28 @@ class DB {
     return result;
   }
 
+  static Future<int> actualizarCita(Cita c) async {
+    Database db = await _conectarDB();
+    final result = await db.rawUpdate(
+      'UPDATE CITA '
+          'SET LUGAR = ?, FECHA = ?, HORA = ?, ANOTACIONES = ?, IDPERSONA = ? WHERE IDCITA = ?',
+      [c.LUGAR, c.FECHA, c.HORA, c.ANOTACIONES, c.IDPERSONA, c.IDCITA]
+    );
+    return result;
+  }
+
   static Future<int> eliminarPersona(int id) async {
     Database db = await _conectarDB();
     final result = await db.rawDelete(
       'DELETE FROM PERSONA WHERE IDPERSONA = ?',
       [id],
     );
+    return result;
+  }
+
+  static Future<int> eliminarCita(int id) async {
+    Database db = await _conectarDB();
+    final result = await db.rawDelete('DELETE FROM CITA WHERE IDCITA = ?',[id]);
     return result;
   }
 }

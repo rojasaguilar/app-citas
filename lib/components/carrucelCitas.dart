@@ -1,34 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:u3_ejercicio2_tabasconforanea/pages/cita/datosCita.dart';
+import 'package:u3_ejercicio2_tabasconforanea/basedatosforanea.dart';
 
 class Carrucelcitas extends StatefulWidget {
-  final List<Map<String, dynamic>> citas;
-  final Function(Map<String, dynamic>) onS;
-  const Carrucelcitas({required this.onS, required this.citas, super.key});
+  const Carrucelcitas({ super.key});
 
   @override
   State<Carrucelcitas> createState() => _CarrucelcitasState();
 }
 
 class _CarrucelcitasState extends State<Carrucelcitas> {
+  List<Map<String, dynamic>> citas = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    actualizarCitas();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return widget.citas.isEmpty
+    return citas.isEmpty
         ? const Text("No tienes citas agendadas para hoy")
         : Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             child: ListView(
               // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Tus citas: (${widget.citas.length})"),
+                Text("Tus citas: (${citas.length})"),
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: widget.citas.length,
+                  itemCount: citas.length,
                   itemBuilder: (context, index) {
-                    final cita = widget.citas[index];
+                    final cita = citas[index];
                     return InkWell(
                       onTap: () {
-                        widget.onS(cita);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Datoscita(onEdit: (){
+                         setState(() {
+                           actualizarCitas();
+                         });
+                        }, cita: cita)));
                       },
                       child: Container(
                         padding: const EdgeInsets.all(12),
@@ -95,5 +108,12 @@ class _CarrucelcitasState extends State<Carrucelcitas> {
               ],
             ),
           );
+  }
+
+  void actualizarCitas() async {
+    final List<Map<String, dynamic>> citasTemp = await DB.obtenerCitas2();
+    setState(() {
+      citas = citasTemp;
+    });
   }
 }

@@ -3,7 +3,8 @@ import 'package:u3_ejercicio2_tabasconforanea/basedatosforanea.dart';
 import 'package:u3_ejercicio2_tabasconforanea/models/persona.dart';
 
 class Addpersona extends StatefulWidget {
-  const Addpersona({super.key});
+  final Function onAdd;
+  const Addpersona({ required this.onAdd, super.key});
 
   @override
   State<Addpersona> createState() => _AddpersonaState();
@@ -86,6 +87,7 @@ class _AddpersonaState extends State<Addpersona> {
                           duration: Duration(milliseconds: 900),
                         ),
                       );
+                      widget.onAdd();
                       Navigator.pop(context);
                     });
                   },

@@ -122,7 +122,6 @@ class _AddcitaState extends State<Addcita> {
                 )
                 .then((r) {
                   if (r > 0) {
-                    print(r);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Row(

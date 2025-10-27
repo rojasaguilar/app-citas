@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Gridhours extends StatefulWidget {
+  final String? initHour;
   final Function(String) setHour;
-  const Gridhours({required this.setHour, super.key});
+  const Gridhours({this.initHour, required this.setHour, super.key});
 
   @override
   State<Gridhours> createState() => _GridhoursState();
@@ -11,6 +12,17 @@ class Gridhours extends StatefulWidget {
 class _GridhoursState extends State<Gridhours> {
   List<bool> isSelectedList = List.generate(18, (_) => false);
   int prev = -1;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.initHour != null && widget.initHour!.isNotEmpty) {
+      prev = indexOfInitHour();
+      isSelectedList[prev] = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -43,7 +55,7 @@ class _GridhoursState extends State<Gridhours> {
               }
               isSelectedList[index] = !isSelectedList[index];
               prev = index;
-             widget.setHour(formatHour(index));
+              widget.setHour(formatHour(index));
             });
           },
         );
@@ -52,9 +64,16 @@ class _GridhoursState extends State<Gridhours> {
   }
 
   String formatHour(int i) {
-    if (i+5 < 10) {
+    if (i + 5 < 10) {
       return "0${i + 5}:00";
     }
     return "${i + 5}:00";
+  }
+
+  int indexOfInitHour() {
+    if (widget.initHour!.length < 5) {
+      return int.parse(widget.initHour![0]) - 5;
+    }
+    return int.parse(widget.initHour!.substring(0, 2)) - 5;
   }
 }

@@ -39,7 +39,15 @@ class _PersonasState extends State<Personas> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Addpersona()),
+                    MaterialPageRoute(
+                      builder: (context) => Addpersona(
+                        onAdd: () {
+                          setState(() {
+                            obtenerPersonas();
+                          });
+                        },
+                      ),
+                    ),
                   );
                 },
                 icon: Icon(Icons.add),
@@ -68,16 +76,12 @@ class _PersonasState extends State<Personas> {
                         );
                       },
                       child: Container(
-                        // margin: EdgeInsets.only(bottom: 4),
                         padding: EdgeInsets.only(
                           top: 15,
                           right: 15,
                           bottom: 15,
                         ),
-                        decoration: BoxDecoration(
-                          // color: Colors.indigo[100],
-                          // borderRadius: BorderRadius.circular(4)
-                        ),
+                        decoration: BoxDecoration(),
                         child: Row(
                           children: [
                             CircleAvatar(
