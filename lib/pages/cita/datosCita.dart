@@ -274,6 +274,7 @@ class _DatoscitaState extends State<Datoscita> {
                   Text(
                     "Cita con ${citaLocal['NOMBRE']}",
                     style: TextStyle(fontSize: 32),
+                    // overflow: TextOverflow.ellipsis,
                   ),
 
                   SizedBox(height: 15),
@@ -296,16 +297,25 @@ class _DatoscitaState extends State<Datoscita> {
                       ),
 
                       //PERSONA
-                      Container(
+                      Flexible(
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            CircleAvatar(child: Icon(Icons.face)),
+                            Flexible(
+                              child: CircleAvatar(child: Icon(Icons.face)),
+                            ),
                             SizedBox(width: 8),
-                            Text(
-                              citaLocal['NOMBRE'],
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
+                            Flexible(
+                              child: Text(
+                                citaLocal['NOMBRE'],
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.1,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
                               ),
                             ),
                           ],
